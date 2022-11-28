@@ -86,7 +86,15 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <!--Step 5: Global Error handler and 3rd Party Tracking-->
+  <!--install the TrackJS Agent-->
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+    token: "d92aebee6c624692b08ad1a34414400b"
+    // for more configuration options, see https://docs.trackjs.com
+     });
+  </script>
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
@@ -95,13 +103,117 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
+      // Step 3: experiment try, throw, catch, finally
+      try {
+        
+        let isnum = /^\d+$/.test(firstNum);
+        let isnum2 = /^\d+$/.test(secondNum);
+        // Step 4: define and throw custom error 
+        class customError extends Error {
+          constructor(message) {
+            super(message);
+            this.name = "Custom Error";
+          }
+        }
+        if (!isnum || !isnum2) {
+          throw new customError("Invalid or unexpected token: Not a Number");
+      }
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+    } catch (err) {
+      throw err;
+    } finally {
+      console.log("I run regardless of the result");
+    }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    let log = document.querySelectorAll('button')[1];
+    log.addEventListener('click', e=> {
+      console.log("Console Log Demo");
+    });
+    let error = document.querySelectorAll('button')[2];
+    error.addEventListener('click', e=> {
+      console.error("Console Error Demo");
+    });
+    let count = document.querySelectorAll('button')[3];
+    count.addEventListener('click', e=> {
+      console.count();
+    });
+    let warn = document.querySelectorAll('button')[4];
+    warn.addEventListener('click', e=> {
+      console.warn("Console Warn Button");
+    });
+    let assert = document.querySelectorAll('button')[5];
+    assert.addEventListener('click', e=> {
+      let number = 2;
+      const errorMsg = "The number does not equal 3";
+      console.assert(number === 3, '%o', {number, errorMsg});
+    });
+    let clear = document.querySelectorAll('button')[6];
+    clear.addEventListener('click', e=> {
+      console.clear();
+    });
+    let dir = document.querySelectorAll('button')[7];
+    dir.addEventListener('click', e=> {
+      console.dir(dir);
+    });
+    let dirxml = document.querySelectorAll('button')[8];
+    dirxml.addEventListener('click', e=> {
+      console.dirxml(dirxml);
+    });
+    let start = document.querySelectorAll('button')[9];
+    start.addEventListener('click', e=> {
+      console.group();
+    });
+    let end = document.querySelectorAll('button')[10];
+    end.addEventListener('click', e=> {
+      console.groupEnd();
+    });
+    let table = document.querySelectorAll('button')[11];
+    table.addEventListener('click', e=> {
+      const tab = [
+        {name: 'Software Engineering', num:110},
+        {name: 'Programming Language', num:130},
+        {name: 'Advanced Software', num: 112}
+    ]; 
+      console.table(tab);
+    });
+    let timers = document.querySelectorAll('button')[12];
+    timers.addEventListener('click', e=> {
+      console.time();
+    });
+    let timed = document.querySelectorAll('button')[13];
+    timed.addEventListener('click', e=> {
+      console.timeEnd();
+    });
+    let trace = document.querySelectorAll('button')[14];
+    trace.addEventListener('click', function handleBtnClick (){
+      function deep() {
+        function deeper() {
+          function deepest() {
+            console.trace(trace);
+          };
+          deepest();
+        };
+        deeper();
+        
+      };
+      deep();
+      
+    });
+    let global = document.querySelectorAll('button')[15];
+    global.addEventListener('click', e=> {
+      let dom = document.querySelectorAll('button')[16];
+      dom.addEventListener('submit', e=> {
+        console.log("do nothing");
+      })
+    });
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.log('Sadly an error happened my friend');
+    }
   </script>
 </body>
 
